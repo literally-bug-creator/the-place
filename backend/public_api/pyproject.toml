@@ -1,0 +1,36 @@
+[project]
+name = "public-api"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = []
+
+[tool.ruff]
+src = ["."]
+target-version = "py313"
+
+select = [
+    "E",  # pycodestyle (ошибки форматирования)
+    "F",  # pyflakes (ошибки исполнения)
+    "I",  # isort (сортировка импортов)
+    "B",  # flake8-bugbear (типовые баги)
+    "UP", # pyupgrade (обновление синтаксиса под текущую версию Python)
+    "D",  # pydocstyle (докстринги)
+    "N",  # pep8-naming (именования)
+    "C90", # mccabe (сложность функций)
+]
+
+ignore = [
+    "D100",  # Missing docstring in public module
+    "D104",  # Missing docstring in public package
+    "D107",  # Missing docstring in __init__
+    "B008",  # Do not perform function calls in argument defaults (может быть шумным)
+]
+
+line-length = 80
+
+[tool.ruff.mccabe]
+max-complexity = 10
+
+[tool.ruff.isort]
+combine-as-imports = true
+force-sort-within-sections = true
