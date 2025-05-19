@@ -1,0 +1,24 @@
+name: Type Check with Ty
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck:
+    name: Run Ty Type Checker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv and Ty
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          ~/.cargo/bin/uv pip install --system ty
+
+      - name: Run Ty
+        run: ~/.cargo/bin/uvx ty check
