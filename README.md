@@ -1,5 +1,5 @@
-# 🌆 **Oglanis**
-**Oglanis** is a community platform focused on urban life and development in our city.
+# 🌆 **The Place**
+**The Place** is a community platform focused on urban life and development in our city.
 It’s a space for sharing ideas, suggesting improvements, and reflecting on the city's past, present, and future.
 
 ---
