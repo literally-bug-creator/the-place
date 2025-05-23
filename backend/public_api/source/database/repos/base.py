@@ -68,15 +68,11 @@ class BaseRepo[ModelT: Base]:
         async with self._start_session():
             return await self.filter_one(self.model.id == id)
 
-    async def filter(
-        self, *where: Any, **filters: Any
-    ) -> Iterable[ModelT] | Any:
+    async def filter(self, *where: Any, **filters: Any) -> Iterable[ModelT] | Any:
         query = self._get_query().where(*where).filter_by(**filters)
         return (await self.execute(query)).scalars()
 
-    async def filter_one(
-        self, *where: Any, **filters: Any
-    ) -> ModelT | None | Any:
+    async def filter_one(self, *where: Any, **filters: Any) -> ModelT | None | Any:
         query = self._get_query().where(*where).filter_by(**filters)
         return (await self.execute(query)).scalar_one_or_none()
 
@@ -124,14 +120,10 @@ class BaseRepo[ModelT: Base]:
         field = getattr(self.model, params.field, None)
         if field is None:
             return query
-        sorting_field = (
-            field.asc() if params.order == SortOrder.Asc else field.desc()
-        )
+        sorting_field = field.asc() if params.order == SortOrder.Asc else field.desc()
         return query.order_by(sorting_field)
 
-    def _apply_pagination(
-        self, query: Select[Any], params: PaginationParams
-    ) -> Any:
+    def _apply_pagination(self, query: Select[Any], params: PaginationParams) -> Any:
         limit = params.per_page
         offset = (params.page - 1) * limit
         return query.limit(limit).offset(offset)
