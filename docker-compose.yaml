@@ -1,0 +1,73 @@
+x-logging: &logging
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "100m"
+      max-file: "3"
+
+
+x-service-defaults: &service-defaults
+  stop_grace_period: 1s
+  entrypoint:
+    - "/project/entrypoint.sh"
+
+
+services:
+  db:
+    image: postgres:16.4-bookworm
+    restart: always
+    env_file:
+      - ${DB_ENV}
+    volumes:
+      - .docker_volumes/postgres_data:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -p 5432"]
+      start_period: 10s
+    <<: *logging
+
+
+  private_api:
+    build: ./backend/private_api
+    restart: always
+    volumes:
+      - "./backend/private_api:/project"
+    env_file:
+      - ${PRIVATE_API_ENV}
+    ports:
+      - ${PRIVATE_API_PORT}:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "netcat -z localhost 8000"]
+      start_period: 10s
+    <<: *service-defaults
+
+  
+  public_api:
+    build: ./backend/public_api
+    restart: always
+    volumes:
+      - "./backend/public_api:/project"
+    env_file:
+      - ${PUBLIC_API_ENV}
+    ports:
+      - ${PUBLIC_API_PORT}:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "netcat -z localhost 8000"]
+      start_period: 10s
+    <<: *service-defaults
+
+
+  frontend:
+    build: ./frontend
+    ports:
+      - ${FRONTEND_PORT}:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    <<: *logging
