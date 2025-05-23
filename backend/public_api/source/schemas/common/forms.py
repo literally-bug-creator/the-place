@@ -49,9 +49,7 @@ def __serialize_upload_file(value: UploadFile) -> FormField:
     )
 
 
-PydanticUploadFile = Annotated[
-    UploadFile, PlainSerializer(__serialize_upload_file)
-]
+PydanticUploadFile = Annotated[UploadFile, PlainSerializer(__serialize_upload_file)]
 
 
 class BaseForm(BaseModel):
