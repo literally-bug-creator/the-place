@@ -3,7 +3,12 @@ name = "public-api"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
+    "aiofiles>=24.1.0",
     "alembic>=1.16.1",
+    "fastapi>=0.115.12",
+    "pydantic>=2.11.5",
+    "pydantic-settings>=2.9.1",
+    "pyjwt>=2.10.1",
     "sqlalchemy>=2.0.41",
     "uvicorn>=0.34.2",
 ]
@@ -24,6 +29,8 @@ lint.ignore = [
     "ISC001",
     "COM812",
     "INP001",
+    "PGH003",
+    "D101",
 ]
 
 [tool.ruff.lint.mccabe]
