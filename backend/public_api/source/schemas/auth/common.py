@@ -1,7 +1,8 @@
 from enums.user_role import EUserRole
+from pydantic import BaseModel
 
 
-class User:
+class User(BaseModel):
     id: int
     email: str
     nickname: str
