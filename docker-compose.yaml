@@ -22,7 +22,7 @@ services:
       - .docker_volumes/postgres_data:/var/lib/postgresql/data
       - ./db:/docker-entrypoint-initdb.d
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -p 5432"]
+      test: ["CMD-SHELL", "pg_isready -p 5432 -U the-place"]
       start_period: 10s
     <<: *logging
 
