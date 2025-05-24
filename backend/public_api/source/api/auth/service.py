@@ -7,6 +7,7 @@ import jwt
 from schemas.auth import forms, responses
 from schemas.auth.common import User as UserScheme
 from utils.auth import read_key
+from .utils import hash_password, is_password_valid, generate_token, decode_token
 
 
 class AuthService:
@@ -29,10 +30,10 @@ class AuthService:
         if await self.repo.is_empty():
             role = EUserRole.ADMIN
 
-        hashed_password = self._hash_password(form.password)
+        hashed = hash_password(form.password)
         model = await self.repo.new(
             **form.model_dump(exclude={"password"}),
-            hashed_password=hashed_password,
+            hashed_password=hashed,
             role=role,
         )
 
@@ -45,13 +46,13 @@ class AuthService:
         if not (model := await self.repo.filter_one(email=form.email)):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
-        if not self._is_password_valid(form.password, model.hashed_password):
+        if not is_password_valid(form.password, model.hashed_password):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
         payload = UserScheme.model_validate(model, from_attributes=True).model_dump()
         private_key = await read_key(self.settings.private_key_path)
 
-        token = jwt.encode(
+        token = await generate_token(
             payload,
             private_key,
             self.settings.algorithm,
@@ -63,7 +64,7 @@ class AuthService:
         public_key = await read_key(self.settings.public_key_path)
 
         try:
-            payload = jwt.decode(token, public_key, [self.settings.algorithm])
+            payload = await decode_token(token, public_key, [self.settings.algorithm])
             scheme: UserScheme = UserScheme.model_validate(payload)
         except jwt.InvalidTokenError:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED) from None
@@ -72,17 +73,3 @@ class AuthService:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
         return responses.Me.model_validate(scheme.model_dump())
-
-    def _hash_password(
-        self,
-        password: str,
-    ) -> bytes:
-        salt = bcrypt.gensalt()
-        return bcrypt.hashpw(password.encode(), salt)
-
-    def _is_password_valid(
-        self,
-        password: str,
-        hashed_password: bytes,
-    ) -> bool:
-        return bcrypt.checkpw(password.encode(), hashed_password)
