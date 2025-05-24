@@ -3,7 +3,8 @@ from collections.abc import Callable
 import aiofiles
 from api.auth.config import PREFIX, EPath
 from config import get_auth_settings
-from database.repos import UserRepo
+from database.repos.user import UserRepo
+from enums.user_role import EUserRole
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 import jwt
@@ -33,7 +34,7 @@ async def get_user(
         payload = jwt.decode(token, public_key, [auth_settings.algorithm])
         user_scheme: User = User.model_validate(payload)
     except jwt.InvalidTokenError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED) from None
 
     if not await repo.filter_one(**user_scheme.model_dump()):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -41,7 +42,7 @@ async def get_user(
     return user_scheme
 
 
-def get_user_by_min_role(min_role: UserRole | None = None) -> Callable:
+def get_user_by_min_role(min_role: EUserRole | None = None) -> Callable:
     async def dep(user: User = Depends(get_user)) -> User:
         if (min_role is not None) and (user.role > min_role):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
@@ -50,7 +51,7 @@ def get_user_by_min_role(min_role: UserRole | None = None) -> Callable:
     return dep
 
 
-def get_user_has_role(roles: list[UserRole]) -> Callable:
+def get_user_has_role(roles: list[EUserRole]) -> Callable:
     async def dep(user: User = Depends(get_user)) -> User:
         if user.role not in roles:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
