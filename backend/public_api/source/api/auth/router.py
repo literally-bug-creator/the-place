@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, status
 from schemas.auth import forms, responses
-from services.auth import AuthService
 from utils.auth import oauth2_bearer
 
 from .config import PREFIX, EPath
+from .service import AuthService
 
 router = APIRouter(prefix=PREFIX, tags=["Auth"])
 
