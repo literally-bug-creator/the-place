@@ -1,6 +1,6 @@
+from api.auth import auth_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.auth import auth_router
 
 app = FastAPI(title="ThePlace Public API")
 
