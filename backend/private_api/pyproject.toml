@@ -1,36 +1,47 @@
 [project]
 name = "private-api"
 version = "0.1.0"
-requires-python = ">=3.13"
-dependencies = []
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.16.1",
+    "asyncpg>=0.30.0",
+    "fastapi>=0.115.12",
+    "pydantic>=2.11.5",
+    "pydantic-settings>=2.9.1",
+    "sqlalchemy>=2.0.41",
+    "uvicorn>=0.34.2",
+]
 
 [tool.ruff]
 src = ["."]
-target-version = "py313"
-
-select = [
-    "E",  # pycodestyle (ошибки форматирования)
-    "F",  # pyflakes (ошибки исполнения)
-    "I",  # isort (сортировка импортов)
-    "B",  # flake8-bugbear (типовые баги)
-    "UP", # pyupgrade (обновление синтаксиса под текущую версию Python)
-    "D",  # pydocstyle (докстринги)
-    "N",  # pep8-naming (именования)
-    "C90", # mccabe (сложность функций)
+line-length = 88
+target-version = "py312"
+lint.select = ["ALL"]
+lint.ignore = [
+    "D100",
+    "D102",
+    "D103",
+    "D104",
+    "D107",
+    "B008",
+    "S104",
+    "D203",
+    "D212",
+    "ISC001",
+    "COM812",
+    "INP001",
+    "PGH003",
+    "D101",
 ]
 
-ignore = [
-    "D100",  # Missing docstring in public module
-    "D104",  # Missing docstring in public package
-    "D107",  # Missing docstring in __init__
-    "B008",  # Do not perform function calls in argument defaults (может быть шумным)
-]
-
-line-length = 80
-
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 10
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 combine-as-imports = true
 force-sort-within-sections = true
+
+
+[tool.ruff.format]
+docstring-code-format = true
+quote-style = "preserve"
