@@ -58,3 +58,14 @@ async def get_me(
     service: AuthService = Depends(AuthService),
 ):
     return await service.get_me(token)
+
+
+@router.post(
+    path=EPath.LOGOUT,
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {},
+    },
+)
+async def logout(service: AuthService = Depends(AuthService)):
+    return await service.logout()
