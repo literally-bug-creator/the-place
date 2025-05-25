@@ -2,7 +2,7 @@ import bcrypt
 from config import get_auth_settings
 from database.repos.user import UserRepo
 from enums.user_role import EUserRole
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Response
 import jwt
 from schemas.auth import forms, responses
 from schemas.auth.common import User as UserScheme
@@ -86,3 +86,6 @@ class AuthService:
         hashed_password: bytes,
     ) -> bool:
         return bcrypt.checkpw(password.encode(), hashed_password)
+    
+    async def logout(self):
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
