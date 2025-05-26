@@ -22,13 +22,13 @@ register = convert_dc_to_pd(_RegisterDC, Register)
 
 
 class Login(BaseForm):
-    email: EmailStr
+    username: EmailStr
     password: str
 
 
 @dataclass
 class _LoginDC:
-    email: EmailStr = Form(...)
+    username: EmailStr = Form(...)
     password: str = Form(...)
 
 
