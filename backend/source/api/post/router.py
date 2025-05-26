@@ -20,7 +20,7 @@ router = APIRouter(prefix=PREFIX, tags=["Post"])
     },
 )
 async def create(
-    body: Annotated[bodies.Create, Depends()],
+    body: bodies.Create,
     service: Annotated[PostService, Depends(PostService)],
 ) -> responses.Create:
     return await service.create(body)
@@ -56,8 +56,8 @@ async def read(
     },
 )
 async def update(
+    body: bodies.Update,
     pms: Annotated[params.Update, Depends()],
-    body: Annotated[bodies.Update, Depends()],
     service: Annotated[PostService, Depends(PostService)],
 ) -> responses.Update:
     return await service.update(pms, body)
