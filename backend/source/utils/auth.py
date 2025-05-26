@@ -1,10 +1,7 @@
-from collections.abc import Callable
-
 import aiofiles
 from api.auth.config import PREFIX, EPath
 from config import get_auth_settings
 from database.repos.user import UserRepo
-from enums.user_role import EUserRole
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 import jwt
@@ -14,7 +11,7 @@ auth_settings = get_auth_settings()
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl=PREFIX + EPath.LOGIN)
 
 
-async def read_key(path: str):
+async def read_key(path: str) -> str:
     async with aiofiles.open(path) as key_file:
         return await key_file.read()
 
@@ -40,22 +37,3 @@ async def get_user(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
     return user_scheme
-
-
-def get_user_by_min_role(min_role: EUserRole | None = None) -> Callable:
-    async def dep(user: User = Depends(get_user)) -> User:
-        if (min_role is not None) and (user.role > min_role):
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-        return user
-
-    return dep
-
-
-def get_user_has_role(roles: list[EUserRole]) -> Callable:
-    async def dep(user: User = Depends(get_user)) -> User:
-        if user.role not in roles:
-            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
-
-        return user
-
-    return dep
