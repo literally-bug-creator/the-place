@@ -2,7 +2,8 @@ import asyncio
 from logging.config import fileConfig
 
 from alembic import context
-from database import Base, get_db_url
+from database import get_db_url
+from database.models import Base
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
@@ -18,14 +19,17 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-
+# from myapp import mymodel
+# target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
-config.set_main_option("sqlalchemy.url", get_db_url())
-
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
+# my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+
+config.set_main_option("sqlalchemy.url", get_db_url())
 
 
 def run_migrations_offline() -> None:
