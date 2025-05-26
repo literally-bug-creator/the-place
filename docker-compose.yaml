@@ -24,32 +24,15 @@ services:
       start_period: 10s
     <<: *logging
 
-  private_api:
-    build: ./backend/private_api
+  backend:
+    build: ./backend
     restart: always
     volumes:
-      - "./backend/private_api:/project"
+      - "./backend:/project"
     env_file:
-      - ${PRIVATE_API_ENV}
+      - ${BACKEND_ENV}
     ports:
-      - ${PRIVATE_API_PORT}:8000
-    depends_on:
-      db:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD-SHELL", "netcat -z localhost 8000"]
-      start_period: 10s
-    <<: *service-defaults
-
-  public_api:
-    build: ./backend/public_api
-    restart: always
-    volumes:
-      - "./backend/public_api:/project"
-    env_file:
-      - ${PUBLIC_API_ENV}
-    ports:
-      - ${PUBLIC_API_PORT}:8000
+      - ${BACKEND_API_PORT}:8000
     depends_on:
       private_api:
         condition: service_healthy
