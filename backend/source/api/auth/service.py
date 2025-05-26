@@ -43,7 +43,7 @@ class AuthService:
         return responses.Register.model_validate(model, from_attributes=True)
 
     async def login(self, form: forms.Login) -> responses.Login:
-        if not (model := await self.repo.filter_one(email=form.email)):
+        if not (model := await self.repo.filter_one(email=form.username)):
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
         if not is_password_valid(form.password, model.hashed_password):
@@ -74,5 +74,5 @@ class AuthService:
 
         return responses.Me.model_validate(scheme.model_dump())
 
-    async def logout(self) -> Response:
+    async def logout(self) -> None:
         return Response(status_code=status.HTTP_204_NO_CONTENT)

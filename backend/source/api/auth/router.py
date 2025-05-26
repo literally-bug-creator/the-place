@@ -1,13 +1,15 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, Depends, status
+from fastapi.security import OAuth2PasswordBearer
 from schemas.auth import forms, responses
-from utils.auth import oauth2_bearer
 
+# from utils.auth import oauth2_bearer
 from .config import PREFIX, EPath
 from .service import AuthService
 
 router = APIRouter(prefix=PREFIX, tags=["Auth"])
+oauth2_bearer = OAuth2PasswordBearer(tokenUrl=PREFIX + EPath.LOGIN)
 
 
 @router.post(
@@ -69,5 +71,5 @@ async def get_me(
         status.HTTP_204_NO_CONTENT: {},
     },
 )
-async def logout(service: Annotated[AuthService, Depends()]) -> Response:
+async def logout(service: Annotated[AuthService, Depends()]) -> None:
     return await service.logout()
