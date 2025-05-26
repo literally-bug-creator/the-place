@@ -1,0 +1,77 @@
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, status
+from schemas.post import params, responses
+
+from .config import PREFIX, EPath
+from .service import PostService
+
+router = APIRouter(prefix=PREFIX, tags=["Post"])
+
+
+@router.post(
+    path=EPath.CREATE,
+    status_code=status.HTTP_201_CREATED,
+    responses={
+        status.HTTP_201_CREATED: {"model": ...},
+        status.HTTP_400_BAD_REQUEST: {},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {},
+        status.HTTP_503_SERVICE_UNAVAILABLE: {},
+    },
+)
+async def create(
+    service: Annotated[PostService, Depends(PostService)],
+) -> responses.Create:
+    return await service.create()
+
+
+@router.get(
+    path=EPath.READ,
+    status_code=status.HTTP_200_OK,
+    responses={
+        status.HTTP_200_OK: {"model": ...},
+        status.HTTP_400_BAD_REQUEST: {},
+        status.HTTP_404_NOT_FOUND: {},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {},
+        status.HTTP_503_SERVICE_UNAVAILABLE: {},
+    },
+)
+async def read(
+    service: Annotated[PostService, Depends(PostService)],
+) -> responses.Read:
+    return await service.read()
+
+
+@router.patch(
+    path=EPath.UPDATE,
+    status_code=status.HTTP_202_ACCEPTED,
+    responses={
+        status.HTTP_202_ACCEPTED: {"model": ...},
+        status.HTTP_400_BAD_REQUEST: {},
+        status.HTTP_404_NOT_FOUND: {},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {},
+        status.HTTP_503_SERVICE_UNAVAILABLE: {},
+    },
+)
+async def update(
+    service: Annotated[PostService, Depends(PostService)],
+) -> responses.Update:
+    return await service.update()
+
+
+@router.delete(
+    path=EPath.DELETE,
+    status_code=status.HTTP_204_NO_CONTENT,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"model": ...},
+        status.HTTP_400_BAD_REQUEST: {},
+        status.HTTP_404_NOT_FOUND: {},
+        status.HTTP_500_INTERNAL_SERVER_ERROR: {},
+        status.HTTP_503_SERVICE_UNAVAILABLE: {},
+    },
+)
+async def delete(
+    pms: Annotated[params.Delete, Depends()],
+    service: Annotated[PostService, Depends()],
+) -> responses.Delete:
+    return await service.delete(pms)
