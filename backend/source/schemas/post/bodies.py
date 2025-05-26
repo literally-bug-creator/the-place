@@ -1,18 +1,15 @@
-from datetime import datetime
-
 from fastapi import Body
 from pydantic import BaseModel
+from utils.datetime import datetime, utcnow
 
 
 class Create(BaseModel):
-    creator_id: int = Body()
-    created_at: datetime = Body()
+    created_at: datetime = Body(default=utcnow())
     title: str = Body()
     text: str = Body()
 
 
 class Update(BaseModel):
-    creator_id: int | None = Body()
-    created_at: datetime | None = Body()
-    title: str | None = Body()
-    text: str | None = Body()
+    created_at: datetime | None = Body(default=None)
+    title: str | None = Body(default=None)
+    text: str | None = Body(default=None)

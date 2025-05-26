@@ -1,7 +1,6 @@
-from datetime import datetime
-
 from fastapi import Query
 from pydantic import AliasChoices, BaseModel, Field
+from utils.datetime import datetime, utcnow
 
 
 class Post(BaseModel):
@@ -11,6 +10,7 @@ class Post(BaseModel):
         validation_alias=AliasChoices("creatorId", "creator_id"),
     )
     created_at: datetime = Field(
+        default=utcnow(),
         serialization_alias="createdAt",
         validation_alias=AliasChoices("createdAt", "created_at"),
     )
@@ -22,8 +22,4 @@ class PostFilters(BaseModel):
     creator_id: int | None = Query(
         None,
         validation_alias="creatorId",
-    )
-    created_at: datetime | None = Query(
-        None,
-        validation_alias="createdAt",
     )
