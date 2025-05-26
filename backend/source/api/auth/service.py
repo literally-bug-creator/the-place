@@ -1,13 +1,13 @@
-import bcrypt
 from config import get_auth_settings
 from database.repos.user import UserRepo
 from enums.user_role import EUserRole
-from fastapi import Depends, HTTPException, status, Response
+from fastapi import Depends, HTTPException, Response, status
 import jwt
 from schemas.auth import forms, responses
 from schemas.auth.common import User as UserScheme
 from utils.auth import read_key
-from .utils import hash_password, is_password_valid, generate_token, decode_token
+
+from .utils import decode_token, generate_token, hash_password, is_password_valid
 
 
 class AuthService:
@@ -73,7 +73,6 @@ class AuthService:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
         return responses.Me.model_validate(scheme.model_dump())
- 
-    
-    async def logout(self):
+
+    async def logout(self) -> Response:
         return Response(status_code=status.HTTP_204_NO_CONTENT)
