@@ -14,6 +14,11 @@ class Post(BaseModel):
         serialization_alias="createdAt",
         validation_alias=AliasChoices("createdAt", "created_at"),
     )
+    updated_at: datetime = Field(
+        default=utcnow(),
+        serialization_alias="updatedAt",
+        validation_alias=AliasChoices("updatedAt", "updated_at"),
+    )
     title: str
     text: str
 
