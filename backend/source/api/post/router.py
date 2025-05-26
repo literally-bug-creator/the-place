@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, status
-from schemas.post import params, responses
+from schemas.post import bodies, params, responses
 
 from .config import PREFIX, EPath
 from .service import PostService
@@ -20,9 +20,10 @@ router = APIRouter(prefix=PREFIX, tags=["Post"])
     },
 )
 async def create(
+    body: Annotated[bodies.Create, Depends()],
     service: Annotated[PostService, Depends(PostService)],
 ) -> responses.Create:
-    return await service.create()
+    return await service.create(body)
 
 
 @router.get(
@@ -37,9 +38,10 @@ async def create(
     },
 )
 async def read(
+    pms: Annotated[params.Read, Depends()],
     service: Annotated[PostService, Depends(PostService)],
 ) -> responses.Read:
-    return await service.read()
+    return await service.read(pms)
 
 
 @router.patch(
@@ -54,9 +56,11 @@ async def read(
     },
 )
 async def update(
+    pms: Annotated[params.Update, Depends()],
+    body: Annotated[bodies.Update, Depends()],
     service: Annotated[PostService, Depends(PostService)],
 ) -> responses.Update:
-    return await service.update()
+    return await service.update(pms, body)
 
 
 @router.delete(
