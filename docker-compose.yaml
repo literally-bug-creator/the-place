@@ -34,7 +34,7 @@ services:
     ports:
       - ${BACKEND_API_PORT}:8000
     depends_on:
-      private_api:
+      db:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "netcat -z localhost 8000"]
