@@ -13,7 +13,7 @@ router = APIRouter(prefix=PREFIX, tags=["Post"])
     path=EPath.CREATE,
     status_code=status.HTTP_201_CREATED,
     responses={
-        status.HTTP_201_CREATED: {"model": ...},
+        status.HTTP_201_CREATED: {"model": responses.Create},
         status.HTTP_400_BAD_REQUEST: {},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {},
         status.HTTP_503_SERVICE_UNAVAILABLE: {},
@@ -29,7 +29,7 @@ async def create(
     path=EPath.READ,
     status_code=status.HTTP_200_OK,
     responses={
-        status.HTTP_200_OK: {"model": ...},
+        status.HTTP_200_OK: {"model": responses.Read},
         status.HTTP_400_BAD_REQUEST: {},
         status.HTTP_404_NOT_FOUND: {},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {},
@@ -46,7 +46,7 @@ async def read(
     path=EPath.UPDATE,
     status_code=status.HTTP_202_ACCEPTED,
     responses={
-        status.HTTP_202_ACCEPTED: {"model": ...},
+        status.HTTP_202_ACCEPTED: {"model": responses.Update},
         status.HTTP_400_BAD_REQUEST: {},
         status.HTTP_404_NOT_FOUND: {},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {},
@@ -63,7 +63,7 @@ async def update(
     path=EPath.DELETE,
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
-        status.HTTP_204_NO_CONTENT: {"model": ...},
+        status.HTTP_204_NO_CONTENT: {},
         status.HTTP_400_BAD_REQUEST: {},
         status.HTTP_404_NOT_FOUND: {},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {},
@@ -73,5 +73,5 @@ async def update(
 async def delete(
     pms: Annotated[params.Delete, Depends()],
     service: Annotated[PostService, Depends()],
-) -> responses.Delete:
+) -> None:
     return await service.delete(pms)

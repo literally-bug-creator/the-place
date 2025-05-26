@@ -2,14 +2,14 @@ from collections.abc import AsyncIterator
 import os
 from typing import no_type_check
 
-MISSING_DATABASE_URL = "DATABASE_URL is not set"
-
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
     create_async_engine,
 )
 from sqlalchemy.orm import declarative_base, sessionmaker
+
+MISSING_DATABASE_URL = "DATABASE_URL is not set"
 
 Base = declarative_base()
 
