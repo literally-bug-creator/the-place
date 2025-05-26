@@ -1,7 +1,8 @@
-from database.models.base import Base
 from enums.user_role import EUserRole
 from sqlalchemy import Index
 from sqlalchemy.orm import Mapped, mapped_column
+
+from .base import Base
 
 
 class User(Base):

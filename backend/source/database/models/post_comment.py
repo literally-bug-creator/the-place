@@ -1,6 +1,7 @@
-from database.models.base import Base
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
+
+from .base import Base
 
 
 class PostComment(Base):
