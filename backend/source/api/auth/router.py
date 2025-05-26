@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, status
+from typing import Annotated
+
+from fastapi import APIRouter, Depends, Response, status
 from schemas.auth import forms, responses
 from utils.auth import oauth2_bearer
 
@@ -19,9 +21,9 @@ router = APIRouter(prefix=PREFIX, tags=["Auth"])
     },
 )
 async def register(
-    form: forms.Register = Depends(forms.register),
-    service: AuthService = Depends(AuthService),
-):
+    form: Annotated[forms.Register, Depends(forms.register)],
+    service: Annotated[AuthService, Depends()],
+) -> responses.Register:
     return await service.register(form)
 
 
@@ -37,9 +39,9 @@ async def register(
     },
 )
 async def login(
-    form: forms.Login = Depends(forms.login),
-    service: AuthService = Depends(AuthService),
-):
+    form: Annotated[forms.Login, Depends(forms.login)],
+    service: Annotated[AuthService, Depends()],
+) -> responses.Login:
     return await service.login(form)
 
 
@@ -54,9 +56,9 @@ async def login(
     },
 )
 async def get_me(
-    token: str = Depends(oauth2_bearer),
-    service: AuthService = Depends(AuthService),
-):
+    token: Annotated[str, Depends(oauth2_bearer)],
+    service: Annotated[AuthService, Depends()],
+) -> responses.Me:
     return await service.get_me(token)
 
 
@@ -67,5 +69,5 @@ async def get_me(
         status.HTTP_204_NO_CONTENT: {},
     },
 )
-async def logout(service: AuthService = Depends(AuthService)):
+async def logout(service: Annotated[AuthService, Depends()]) -> Response:
     return await service.logout()

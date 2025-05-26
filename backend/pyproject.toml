@@ -1,19 +1,18 @@
 [project]
-name = "public-api"
+name = "api"
 version = "0.1.0"
 requires-python = ">=3.12"
 dependencies = [
-    "aiofiles>=24.1.0",
     "alembic>=1.16.1",
+    "asyncpg>=0.30.0",
     "bcrypt>=4.3.0",
     "fastapi>=0.115.12",
-    "pydantic[email]>=2.11.5",
+    "pydantic>=2.11.5",
     "pydantic-settings>=2.9.1",
     "pyjwt>=2.10.1",
+    "python-multipart>=0.0.20",
     "sqlalchemy>=2.0.41",
     "uvicorn>=0.34.2",
-    "python-multipart>=0.0.20",
-    "asyncpg>=0.30.0",
 ]
 
 [tool.ruff]
@@ -26,6 +25,9 @@ lint.ignore = [
     "D102",
     "D103",
     "D104",
+    "D105",
+    "RUF009",
+    "ANN401",
     "D107",
     "B008",
     "S104",

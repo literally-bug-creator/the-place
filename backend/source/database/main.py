@@ -2,6 +2,8 @@ from collections.abc import AsyncIterator
 import os
 from typing import no_type_check
 
+MISSING_DATABASE_URL = "DATABASE_URL is not set"
+
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -15,7 +17,7 @@ Base = declarative_base()
 def get_db_url() -> str:
     url = os.getenv("DATABASE_URL")
     if url is None:
-        raise ValueError("DATABASE_URL is not set")
+        raise ValueError(MISSING_DATABASE_URL)
     return url
 
 
